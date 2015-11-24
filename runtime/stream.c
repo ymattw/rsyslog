@@ -509,7 +509,9 @@ strmHandleEOFMonitor(strm_t *pThis)
 	DBGPRINTF("stream checking for file change on '%s', inode %u/%u\n",
 	  pThis->pszCurrFName, (unsigned) pThis->inode,
 	  (unsigned) statName.st_ino);
-	if(pThis->inode == statName.st_ino) {
+
+        /* Current offset greater than file size on disk means file was truncated */
+	if(pThis->inode == statName.st_ino && pThis->iCurrOffs <= statName.st_size) {
 		ABORT_FINALIZE(RS_RET_EOF);
 	} else {
 		/* we had a file change! */
