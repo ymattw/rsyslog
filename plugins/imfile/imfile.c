@@ -515,6 +515,7 @@ openFile(lstn_t *pLstn)
 	CHKiRet(strm.SettOperationsMode(psSF, STREAMMODE_READ));
 	CHKiRet(strm.SetsType(psSF, STREAMTYPE_FILE_SINGLE));
 	CHKiRet(strm.SetFName(psSF, pszSFNam, lenSFNam));
+	CHKiRet(strm.SetbIsCleanOpen(psSF, 0));
 	CHKiRet(strm.ConstructFinalize(psSF));
 
 	/* read back in the object */
@@ -550,6 +551,7 @@ finalize_it:
 		CHKiRet(strm.SettOperationsMode(pLstn->pStrm, STREAMMODE_READ));
 		CHKiRet(strm.SetsType(pLstn->pStrm, STREAMTYPE_FILE_MONITOR));
 		CHKiRet(strm.SetFName(pLstn->pStrm, pLstn->pszFileName, strlen((char*) pLstn->pszFileName)));
+		CHKiRet(strm.SetbIsCleanOpen(pLstn->pStrm, 1));
 		CHKiRet(strm.ConstructFinalize(pLstn->pStrm));
 	}
 
