@@ -154,6 +154,7 @@ typedef struct strm_s {
 	sbool	bIsTTY;		/* is this a tty file? */
 	cstr_t *prevLineSegment; /* for ReadLine, previous, unprocessed part of file */
 	cstr_t *prevMsgSegment; /* for ReadMultiLine, previous, yet unprocessed part of msg */
+	sbool	bIsCleanOpen;	/* is this a clean open without a state file? */
 } strm_t;
 
 
@@ -200,6 +201,9 @@ BEGINinterface(strm) /* name must also be changed in ENDinterface macro! */
 	/* v9 added  2013-04-04 */
 	INTERFACEpropSetMeth(strm, cryprov, cryprov_if_t*);
 	INTERFACEpropSetMeth(strm, cryprovData, void*);
+
+        /* TODO: bump up interface version */
+	INTERFACEpropSetMeth(strm, bIsCleanOpen, int);
 ENDinterface(strm)
 #define strmCURR_IF_VERSION 10 /* increment whenever you change the interface structure! */
 /* V10, 2013-09-10: added new parameter bEscapeLF, changed mode to uint8_t (rgerhards) */

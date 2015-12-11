@@ -252,6 +252,10 @@ doPhysOpen(strm_t *pThis)
 		pThis->bIsTTY = 1;
 	} else {
 		pThis->bIsTTY = 0;
+		if (1 /* TODO: opt-in flag */ && pThis->bIsCleanOpen) {
+			DBGPRINTF("file %d has flag bIsCleanOpen on\n", pThis->fd);
+			lseek64(pThis->fd, 0, SEEK_END);
+		}
 	}
 
 	if(pThis->cryprov != NULL) {
@@ -891,6 +895,7 @@ BEGINobjConstruct(strm) /* be sure to specify the object type also in END macro!
 	pThis->prevLineSegment = NULL;
 	pThis->prevMsgSegment = NULL;
 	pThis->bPrevWasNL = 0;
+	pThis->bIsCleanOpen = 0;
 ENDobjConstruct(strm)
 
 
@@ -1797,6 +1802,7 @@ DEFpropSetMeth(strm, iFlushInterval, int)
 DEFpropSetMeth(strm, pszSizeLimitCmd, uchar*)
 DEFpropSetMeth(strm, cryprov, cryprov_if_t*)
 DEFpropSetMeth(strm, cryprovData, void*)
+DEFpropSetMeth(strm, bIsCleanOpen, int)
 
 static rsRetVal strmSetbDeleteOnClose(strm_t *pThis, int val)
 {
@@ -2158,6 +2164,7 @@ CODESTARTobjQueryInterface(strm)
 	pIf->SetpszSizeLimitCmd = strmSetpszSizeLimitCmd;
 	pIf->Setcryprov = strmSetcryprov;
 	pIf->SetcryprovData = strmSetcryprovData;
+	pIf->SetbIsCleanOpen = strmSetbIsCleanOpen;
 finalize_it:
 ENDobjQueryInterface(strm)
 
